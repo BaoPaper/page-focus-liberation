@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>切屏检测测试页面</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .status {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+        }
+        .active {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        .inactive {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+    </style>
+</head>
+<body>
+    <h1>切屏检测测试页面</h1>
+    <p>此页面用于测试切屏检测破解脚本的功能。请尝试以下操作：</p>
+    <ul>
+        <li>切换到其他标签页</li>
+        <li>最小化浏览器窗口</li>
+        <li>切换到其他应用程序</li>
+    </ul>
+
+    <div id="focusStatus" class="status active">页面焦点状态：聚焦</div>
+    <div id="visibilityStatus" class="status active">页面可见状态：可见</div>
+    <div id="hasFocusStatus" class="status active">document.hasFocus()：true</div>
+    <div id="hiddenStatus" class="status active">document.hidden：false</div>
+
+    <h2>事件日志：</h2>
+    <pre id="eventLog"></pre>
+
+    <script>
+        const eventLog = document.getElementById('eventLog');
+        const focusStatus = document.getElementById('focusStatus');
+        const visibilityStatus = document.getElementById('visibilityStatus');
+        const hasFocusStatus = document.getElementById('hasFocusStatus');
+        const hiddenStatus = document.getElementById('hiddenStatus');
+
+        function logEvent(event) {
+            const time = new Date().toLocaleTimeString();
+            eventLog.textContent = `${time} - ${event.type}\n` + eventLog.textContent;
+        }
+
+        function updateStatus() {
+            focusStatus.textContent = `页面焦点状态：${document.hasFocus() ? '聚焦' : '失焦'}`;
+            focusStatus.className = `status ${document.hasFocus() ? 'active' : 'inactive'}`;
+
+            visibilityStatus.textContent = `页面可见状态：${document.hidden ? '隐藏' : '可见'}`;
+            visibilityStatus.className = `status ${!document.hidden ? 'active' : 'inactive'}`;
+
+            hasFocusStatus.textContent = `document.hasFocus()：${document.hasFocus()}`;
+            hasFocusStatus.className = `status ${document.hasFocus() ? 'active' : 'inactive'}`;
+
+            hiddenStatus.textContent = `document.hidden：${document.hidden}`;
+            hiddenStatus.className = `status ${!document.hidden ? 'active' : 'inactive'}`;
+        }
+
+        ['visibilitychange', 'blur', 'focus', 'focusin', 'focusout'].forEach(eventName => {
+            window.addEventListener(eventName, (e) => {
+                logEvent(e);
+                updateStatus();
+            });
+        });
+
+        // 定期更新状态，以防事件被阻止
+        setInterval(updateStatus, 1000);
+    </script>
+</body>
+</html>
